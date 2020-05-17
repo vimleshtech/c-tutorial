@@ -1,0 +1,109 @@
+DSA(Data Structure Algorithms)
+========================================
+
+DS:
+-----------------------------------------
+A data structure is a technique of organizing data, so that it can be used effectively.
+
+
+Modules:
+-----------------------------------------
+Array
+Linked List (Single and Double)
+Stack(LIFO-Last In First Out)
+Queue(FIFO-First In First Out)
+Binary Tree (BT)
+Binary Search Tree (BST)
+Sorting Techniques 
+Heap
+Hashing
+Graph
+Matrix
+
+Advanced DS:
+------------------------------------------
+Memory efficient doubly linked list
+XOR Linked List – A Memory Efficient Doubly Linked List 
+Skip List 
+Self Organizing List 
+Unrolled Linked List 
+Segment Tree(Sum of given range)
+Segment Tree(Range Minimum Query)
+Lazy Propagation in Segment Tree
+
+
+Array
+=========================================================
+-An array is a collection of items stored at contiguous memory locations.
+-An array index/position start from 0
+-This makes it easier to calculate the position of each element by simply adding an offset to a base value
+
+
+Example : 
+	arr = [111,22,3444,55,222,11,222,44]
+	First Index: 0
+	Last Index : 7 
+	Length/ Count :  8
+
+
+Creating, Initializing, and Accessing an Array:
+
+Creating/Declartion 
+---------------
+int[] a;
+or
+int a[]'
+
+Initializing:
+-----------------
+int a[];    //declaring array
+a = new int[20];
+
+
+or
+int[] a = new int[20];
+
+
+Array Literal
+----------------
+int[] a= new int[]{ 1,2,3,4,5,6,7,8,9,10 };
+
+
+or
+int a[]={1,2,3,4,54,..10};
+
+Accessing Array
+--------------------
+// accessing the elements of the specified array
+for (int i = 0; i < a.length; i++)
+  System.out.println("Element  " + i + " : "+ a[i]);
+
+
+::Array of objects
+-------------------------
+
+Two Dimenssion Array:
+--------------------------
+int[][] a= new int[2][3]; //a 2D array or matrix
+int[][][] a = new int[2][3][3]; //a 3D array
+
+
+
+
+
+Q.
+	Wap to find the element in array
+	Wap to get sum of all odd numbers from array
+
+	Wap to return max/highest value from array
+	Wap to return min/lowest value from array
+
+	Wap to return all values which is greater avg/mean of all elements in array 
+	wap to sort the array : asc and desc
+
+	wap to insert data in array at given position 
+	wap to insert data in array at given position and every time array should be sorted
+		
+	 
+		
+	

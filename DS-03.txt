@@ -1,0 +1,296 @@
+# input two matrices of size n x m 
+a=[[]]  
+b =[[]]
+
+# This will return dot product 
+res = np.dot(mat1,mat2) 
+
+
+
+res = [[0 for x in range(3)] for y in range(3)]  
+  
+
+for i in range(len(a)): 
+    for j in range(len(b[0])): 
+        for k in range(len(b)): 
+  
+            # resulted matrix 
+            res[i][j] += a[i][k] * b[k][j] 
+  
+
+
+
+The Node
+The node is where data is stored in the linked list (they remind me of those plastic Easter eggs that hold treats). Along with the data each node also holds a pointer, which is a reference to the next node in the list. Below is a simple implementation.
+
+class Node(object):
+
+    def __init__(self, data=None, next_node=None):
+        self.data = data
+        self.next_node = next_node
+
+    def get_data(self):
+        return self.data
+
+    def get_next(self):
+        return self.next_node
+
+    def set_next(self, new_next):
+        self.next_node = new_next
+The node initializes with a single datum and its pointer is set to None by default (this is because the first node inserted into the list will have nothing to point at!). We also add a few convenience methods: one that returns the stored data, another that returns the next node (the node to which the object node points), and finally a method to reset the pointer to a new node. These will come in handy when we implement the Linked List.
+
+The Linked List
+My simple implementation of a linked list includes the following methods:
+
+Insert: inserts a new node into the list
+
+Size: returns size of list
+
+Search: searches list for a node containing the requested data and returns that node if found, otherwise raises an error
+
+Delete: searches list for a node containing the requested data and removes it from list if found, otherwise raises an error
+
+The Head of the List
+The first architectural piece of the linked list is the ‘head node’, which is simply the top node in the list. When the list is first initialized it has no nodes, so the head is set to None. (Note: the linked list doesn’t necessarily require a node to initialize. The head argument will default to None if a node is not provided.)
+
+class LinkedList(object):
+    def __init__(self, head=None):
+        self.head = head
+Insert
+This insert method takes data, initializes a new node with the given data, and adds it to the list. Technically you can insert a node anywhere in the list, but the simplest way to do it is to place it at the head of the list and point the new node at the old head (sort of pushing the other nodes down the line).
+
+As for time complexity, this implementation of insert is constant O(1) (efficient!). This is because the insert method, no matter what, will always take the same amount of time: it can only take one data point, it can only ever create one node, and the new node doesn’t need to interact with all the other nodes in the list, the inserted node will only ever interact with the head.
+
+def insert(self, data):
+    new_node = Node(data)
+    new_node.set_next(self.head)
+    self.head = new_node
+Size
+The size method is very simple, it basically counts nodes until it can’t find any more, and returns how many nodes it found. The method starts at the head node, travels down the line of nodes until it reaches the end (the current will be None when it reaches the end) while keeping track of how many nodes it has seen.
+
+The time complexity of size is O(n) because each time the method is called it will always visit every node in the list but only interact with them once, so n * 1 operations.
+
+def size(self):
+    current = self.head
+    count = 0
+    while current:
+        count += 1
+        current = current.get_next()
+    return count
+Search
+Search is actually very similar to size, but instead of traversing the whole list of nodes it checks at each stop to see whether the current node has the requested data and if so, returns the node holding that data. If the method goes through the entire list but still hasn’t found the data, it raises a value error and notifies the user that the data is not in the list.
+
+The time complexity of search is O(n) in the worst case (you often hear about best case / average case / worst case for Big O analysis. For this purpose of this blog post, we’ll assume worst case is the one we care about it, because it often is!)
+
+def search(self, data):
+    current = self.head
+    found = False
+    while current and found is False:
+        if current.get_data() == data:
+            found = True
+        else:
+            current = current.get_next()
+    if current is None:
+        raise ValueError("Data not in list")
+    return current
+Delete
+You’ll be happy to know that delete is very similar to search! The delete method traverses the list in the same way that search does, but in addition to keeping track of the current node, the delete method also remembers the last node it visited. When delete finally arrives at the node it wants to delete, it simply removes that node from the chain by “leap frogging” it. By this I mean that when the delete method reaches the node it wants to delete, it looks at the last node it visited (the ‘previous’ node), and resets that previous node’s pointer so that, rather than pointing to the soon-to-be-deleted node, it will point to the next node in line. Since no nodes are pointing to the poor node that is being deleted, it is effectively removed from the list!
+
+The time complexity for delete is also O(n), because in the worst case it will visit every node, interacting with each node a fixed number of times.
+
+def delete(self, data):
+    current = self.head
+    previous = None
+    found = False
+    while current and found is False:
+        if current.get_data() == data:
+            found = True
+        else:
+            previous = current
+            current = current.get_next()
+    if current is None:
+        raise ValueError("Data not in list")
+    if previous is None:
+        self.head = current.get_next()
+    else:
+        previous.set_next(current.get_next())
+
+
+
+
+
+
+
+
+
+
+
+
+
+Why Linked List?
+Arrays can be used to store linear data of similar types, but arrays have following limitations.
+1) The size of the arrays is fixed: So we must know the upper limit on the number of elements in advance. Also, generally, the allocated memory is equal to the upper limit irrespective of the usage.
+2) Inserting a new element in an array of elements is expensive, because room has to be created for the new elements and to create room existing elements have to shifted.
+
+For example, in a system if we maintain a sorted list of IDs in an array id[].
+
+id[] = [1000, 1010, 1050, 2000, 2040].
+
+And if we want to insert a new ID 1005, then to maintain the sorted order, we have to move all the elements after 1000 (excluding 1000).
+Deletion is also expensive with arrays until unless some special techniques are used. For example, to delete 1010 in id[], everything after 1010 has to be moved.
+
+Advantages over arrays
+1) Dynamic size
+2) Ease of insertion/deletion
+
+Drawbacks:
+1) Random access is not allowed. We have to access elements sequentially starting from the first node. So we cannot do binary search with linked lists efficiently with its default implementation. Read about it here.
+2) Extra memory space for a pointer is required with each element of the list.
+3) Not cache friendly. Since array elements are contiguous locations, there is locality of reference which is not there in case of linked lists.
+
+Representation:
+A linked list is represented by a pointer to the first node of the linked list. The first node is called head. If the linked list is empty, then value of head is NULL.
+Each node in a list consists of at least two parts:
+1) data
+2) Pointer (Or Reference) to the next node
+In C, we can represent a node using structures. Below is an example of a linked list node with an integer data.
+In Java or C#, LinkedList can be represented as a class and a Node as a separate class. The LinkedList class contains a reference of Node class type.
+
+
+
+
+# Node class 
+class Node: 
+   
+    # Function to initialize the node object 
+    def __init__(self, data): 
+        self.data = data  # Assign data 
+        self.next = None  # Initialize  
+                          # next as null 
+   
+# Linked List class 
+class LinkedList: 
+     
+    # Function to initialize the Linked  
+    # List object 
+    def __init__(self):  
+        self.head = None
+
+
+
+
+ A simple Python program to introduce a linked list 
+  
+# Node class 
+class Node: 
+  
+    # Function to initialise the node object 
+    def __init__(self, data): 
+        self.data = data  # Assign data 
+        self.next = None  # Initialize next as null 
+  
+  
+# Linked List class contains a Node object 
+class LinkedList: 
+  
+    # Function to initialize head 
+    def __init__(self): 
+        self.head = None
+  
+  
+# Code execution starts here 
+if __name__=='__main__': 
+  
+    # Start with the empty list 
+    llist = LinkedList() 
+  
+    llist.head  = Node(1) 
+    second = Node(2) 
+    third  = Node(3) 
+  
+    ''' 
+    Three nodes have been created. 
+    We have references to these three blocks as first, 
+    second and third 
+  
+    llist.head        second              third 
+         |                |                  | 
+         |                |                  | 
+    +----+------+     +----+------+     +----+------+ 
+    | 1  | None |     | 2  | None |     |  3 | None | 
+    +----+------+     +----+------+     +----+------+ 
+    '''
+  
+    llist.head.next = second; # Link first node with second  
+  
+    ''' 
+    Now next of first Node refers to second.  So they 
+    both are linked. 
+  
+    llist.head        second              third 
+         |                |                  | 
+         |                |                  | 
+    +----+------+     +----+------+     +----+------+ 
+    | 1  |  o-------->| 2  | null |     |  3 | null | 
+    +----+------+     +----+------+     +----+------+  
+    '''
+  
+    second.next = third; # Link second node with the third node 
+  
+    ''' 
+    Now next of second Node refers to third.  So all three 
+    nodes are linked. 
+  
+    llist.head        second              third 
+         |                |                  | 
+         |                |                  | 
+    +----+------+     +----+------+     +----+------+ 
+    | 1  |  o-------->| 2  |  o-------->|  3 | null | 
+    +----+------+     +----+------+     +----+------+  
+
+
+
+
+
+# A simple Python program for traversal of a linked list 
+  
+# Node class 
+class Node: 
+  
+    # Function to initialise the node object 
+    def __init__(self, data): 
+        self.data = data  # Assign data 
+        self.next = None  # Initialize next as null 
+  
+  
+# Linked List class contains a Node object 
+class LinkedList: 
+  
+    # Function to initialize head 
+    def __init__(self): 
+        self.head = None
+  
+    # This function prints contents of linked list 
+    # starting from head 
+    def printList(self): 
+        temp = self.head 
+        while (temp): 
+            print temp.data, 
+            temp = temp.next
+  
+  
+# Code execution starts here 
+if __name__=='__main__': 
+  
+    # Start with the empty list 
+    llist = LinkedList() 
+  
+    llist.head  = Node(1) 
+    second = Node(2) 
+    third  = Node(3) 
+  
+    llist.head.next = second; # Link first node with second 
+    second.next = third; # Link second node with the third node 
+  
+    llist.printList() 
+
